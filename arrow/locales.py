@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import inspect
 import sys
 from math import trunc
+from typing import Any, Dict, List, Optional
 
 
 def get_locale(name):
@@ -22,15 +23,16 @@ def get_locale(name):
 
     return locale_cls()
 
+TimeFrames = Dict[str, Any]
 
 # base locale type.
 
 class Locale(object):
     ''' Represents locale-specific data and functionality. '''
 
-    names = []
+    names: List[str] = []
 
-    timeframes = {
+    timeframes: TimeFrames = {
         'now': '',
         'seconds': '',
         'minute': '',
@@ -52,14 +54,14 @@ class Locale(object):
         'PM': '',
     }
 
-    past = None
-    future = None
+    past: Optional[str] = None
+    future: Optional[str] = None
 
-    month_names = []
-    month_abbreviations = []
+    month_names: List[str] = []
+    month_abbreviations: List[str] = []
 
-    day_names = []
-    day_abbreviations = []
+    day_names: List[str] = []
+    day_abbreviations: List[str] = []
 
     ordinal_day_re = r'(\d+)'
 

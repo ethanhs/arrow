@@ -18,6 +18,7 @@ import warnings
 
 from arrow import util, locales, parser, formatter
 
+from typing import ClassVar, Union
 
 class Arrow(object):
     '''An :class:`Arrow <arrow.arrow.Arrow>` object.
@@ -50,15 +51,16 @@ class Arrow(object):
         <Arrow [2013-05-05T12:30:45+00:00]>
 
     '''
-
+    min: ClassVar['Arrow']
+    max: ClassVar['Arrow']
     resolution = datetime.resolution
 
     _ATTRS = ['year', 'month', 'day', 'hour', 'minute', 'second', 'microsecond']
     _ATTRS_PLURAL = ['{0}s'.format(a) for a in _ATTRS]
     _MONTHS_PER_QUARTER = 3
 
-    def __init__(self, year, month, day, hour=0, minute=0, second=0, microsecond=0,
-                 tzinfo=None):
+    def __init__(self, year: int, month: int, day: int, hour: int = 0, minute: int = 0, second: int = 0, microsecond: int = 0,
+                 tzinfo=None) -> None:
 
         if util.isstr(tzinfo):
             tzinfo = parser.TzinfoParser.parse(tzinfo)
@@ -98,7 +100,7 @@ class Arrow(object):
             dt.microsecond, dateutil_tz.tzutc())
 
     @classmethod
-    def fromtimestamp(cls, timestamp, tzinfo=None):
+    def fromtimestamp(cls, timestamp: Union[float, str], tzinfo=None):
         ''' Constructs an :class:`Arrow <arrow.arrow.Arrow>` object from a timestamp, converted to
         the given timezone.
 
@@ -1039,7 +1041,7 @@ class Arrow(object):
             return end, limit
 
     @staticmethod
-    def _get_timestamp_from_input(timestamp):
+    def _get_timestamp_from_input(timestamp: Union[float, str]) -> float:
 
         try:
             return float(timestamp)

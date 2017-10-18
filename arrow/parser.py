@@ -5,13 +5,16 @@ from __future__ import unicode_literals
 from datetime import datetime
 from dateutil import tz
 import re
+import sys
 
-try:
+if sys.version_info >= (3, 2):
     from functools import lru_cache
-except ImportError:  # pragma: no cover
-    from backports.functools_lru_cache import lru_cache  # pragma: no cover
+else:  # pragma: no cover
+    from backports.functools_lru_cache import lru_cache  # type: ignore
 
 from arrow import locales
+
+from typing import Callable, cast
 
 
 class ParserError(RuntimeError):
@@ -78,8 +81,9 @@ class DateTimeParser(object):
         })
         if cache_size > 0:
             self._generate_pattern_re =\
-                lru_cache(maxsize=cache_size)(self._generate_pattern_re)
-
+                cast(Callable, lru_cache(maxsize=cache_size)(self.__generate_pattern_re))
+        else:
+            self._generate_pattern_re = self.__generate_pattern_re
     def parse_iso(self, string):
 
         has_time = 'T' in string or ' ' in string.strip()
@@ -118,7 +122,7 @@ class DateTimeParser(object):
 
         return self._parse_multiformat(string, formats)
 
-    def _generate_pattern_re(self, fmt):
+    def __generate_pattern_re(self, fmt):
 
         # fmt is a string of tokens like 'YYYY-MM-DD'
         # we construct a new string by replacing each

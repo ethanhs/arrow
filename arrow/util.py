@@ -31,15 +31,10 @@ def is_timestamp(value):
         return False
 
 # python 2.7 / 3.0+ definitions for isstr function.
-
-try: # pragma: no cover
-    basestring
-
+if sys.version_info < (3,0):
     def isstr(s):
         return isinstance(s, basestring)
-
-except NameError: #pragma: no cover
-
+else:
     def isstr(s):
         return isinstance(s, str)
 
